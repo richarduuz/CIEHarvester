@@ -88,7 +88,11 @@ while len(result_tmp) == 20 and totalCount > 20:
     for item in result_tmp:
         result.append(item)
 
+print("搜索完毕, 一共找到{num}条记录".format(num = len(result)))
+print()
+counter = 1
 for item in result:
+    print("第{_}条".format(_ = counter))
     for key in item:
         if key == '价格':
             for k, v in item[key].items():
@@ -96,3 +100,4 @@ for item in result:
         else:
             print(key + ': ', item[key])
     print()
+    counter += 1
