@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
-from config import settings
+import util
+import json
 
 app = Flask(__name__)
 
@@ -9,20 +10,31 @@ def internal_error(error):
 
 @app.route('/prices', methods=['GET', 'POST'])
 def getPrices():
+    crawler = util.Crawlers()
     if request.method == 'GET':
         pass
     elif request.method == 'POST':
-        data = request.data.decode('utf-8')
-        pass
-    return 'Okay'
+        rawData = request.data.decode('utf-8')
+        data = json.loads(rawData)
+        result = crawler.crawlAllPrices(data['modelNumber'])
+        return jsonify(result)
 
 @app.route('/auth', methods=['POST'])
 def authUsers():
-    if request.method == 'POST':
-        pass
-    else:
-        pass
-    return jsonify({'result': 'Okay'})
+    auther = util.Auther()
+    try:
+        if request.method == 'POST':
+            rawData = request.data.decode('utf-8')
+            data = json.loads(rawData)
+            password = data['password']
+            if auther.authUser(password):
+                return jsonify({'status': 'Okay', 'message': 'right'})
+            else:
+                return jsonify({'status': 'Okay', 'message': 'wrong'})
+        else:
+            pass
+    except Exception as e:
+        internal_error(str(e))
 
 
 if __name__ == '__main__':
