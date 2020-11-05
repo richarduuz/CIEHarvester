@@ -1,0 +1,16 @@
+#root files 
+__pycache__
+
+#backend files
+
+backend/__pycache__
+backend/venv
+backend/settings.toml
+
+#frontend files
+frontend/node_modules/*
+frontend/package-lock.json
+frontend/app/package*
+frontend/app/node_modules
+
+
