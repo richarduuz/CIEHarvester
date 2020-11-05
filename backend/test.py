@@ -1,3 +1,5 @@
-from config import settings
+import toml
 
-print(settings.admin_password)
+data = toml.load(open('settings.toml'))
+data['authentication']['admin_password'] = 'test'
+toml.dump(data, open('settings.toml', 'w'))

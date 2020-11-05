@@ -1,6 +1,12 @@
+from dynaconf import Dynaconf
+
+settings = Dynaconf(
+    settings_files=['settings.toml']
+)
+
 class Crawlers:
     def __init__(self):
-        from config import settings
+        # from config import settings
         self.settings = settings.as_dict()
         self.website = {}
         for key in self.settings['WEBSITES'].keys():
@@ -64,15 +70,34 @@ class Crawlers:
 
 class Auther:
     def __init__(self):
-        from config import settings
+        # from config import settings
         self.password = settings.as_dict()["AUTHENTICATION"]['password']
         self.admin_password = settings.as_dict()["AUTHENTICATION"]['admin_password']
 
-    def authUser(self, password):
-        if password == self.password:
-            return True
+    def authUser(self, password, isAdmin):
+        tmp = False
+        if isAdmin:
+            if password == self.admin_password:
+                tmp = True
         else:
+            if password == self.password:
+                tmp = True
+        return tmp
+
+    def resetPsw(self, password):
+        try:
+            import toml
+            data = toml.load(open('settings.toml'))
+            data['authentication']['password'] = password
+            toml.dump(data, open('settings.toml', 'w'))
+            global settings
+            settings = Dynaconf(
+                settings_files=['settings.toml'])
+            return True
+        except:
             return False
+
+
 
 
 

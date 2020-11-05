@@ -1,5 +1,5 @@
 FROM node:10
-COPY ./ /app
+COPY .. /app
 WORKDIR /app
 RUN npm install && npm run build
 

@@ -1,5 +1,4 @@
 from flask import Flask, jsonify, request
-import util
 import json
 
 app = Flask(__name__)
@@ -10,6 +9,7 @@ def internal_error(error):
 
 @app.route('/prices', methods=['GET', 'POST'])
 def getPrices():
+    import util
     crawler = util.Crawlers()
     if request.method == 'GET':
         pass
@@ -21,20 +21,42 @@ def getPrices():
 
 @app.route('/auth', methods=['POST'])
 def authUsers():
+    import util
     auther = util.Auther()
     try:
         if request.method == 'POST':
             rawData = request.data.decode('utf-8')
             data = json.loads(rawData)
-            password = data['password']
-            if auther.authUser(password):
-                return jsonify({'status': 'Okay', 'message': 'right'})
+            result = {'status': 'Okay', 'message': 'wrong'}
+            if 'password' in data.keys():
+                password = data['password']
+                result['isAdmin'] = False
             else:
-                return jsonify({'status': 'Okay', 'message': 'wrong'})
+                password = data['adminPassword']
+                result['isAdmin'] = True
+            if auther.authUser(password, result['isAdmin']):
+                result['message'] = 'right'
+            return jsonify(result)
         else:
             pass
     except Exception as e:
         internal_error(str(e))
+
+@app.route('/password', methods=['POST'])
+def resetPaw():
+    try:
+        import util
+        auther = util.Auther()
+        rawData = request.data.decode('utf-8')
+        data = json.loads(rawData)
+        password = data['newPassword']
+        if auther.resetPsw(password):
+            return jsonify({'status': 'Okay'})
+        else:
+            return jsonify({'status': "Wrong"})
+    except Exception as e:
+        internal_error(str(e))
+
 
 
 if __name__ == '__main__':

@@ -4,15 +4,15 @@
       <div class="input-container">
         <h2>输入密码进入系统</h2>
         <span>请输入密码: </span>
-        <input v-model.lazy="password" type="password">
+        <input v-model="password" type="password">
         <br>
         <br>
         <h2>或者你是管理员，你想重制密码: </h2>
         <span>请输入密码: </span>
-        <input v-model.lazy="adminPassword" type="password">
+        <input v-model="adminPassword" type="password">
       </div>
       <div class="btn-container">
-        <p class="login-alert" v-show="adminPassword.length !== 0 && password !== 0">请只输入一个密码</p>
+        <p class="login-alert" v-show="adminPassword.length !== 0 && password.length !== 0">请只输入一个密码</p>
         <button class="submit-btn" @click="authID" :disabled="password.length === 0 && adminPassword.length === 0">确认</button>
       </div>
     </div>
@@ -47,7 +47,14 @@ export default {
         .then(response => response.json())
         .then(data => {
           if (data['message'] === 'right'){
-            this.gotoSearch()
+            this.password = ''
+            this.adminPassword = ''
+            if (data['isAdmin']){
+              this.$emit('showResetpswModal')
+            }
+            else{
+              this.gotoSearch()
+            }
           } else {
             alert('密码不正确')
           }
