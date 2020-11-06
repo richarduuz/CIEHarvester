@@ -57,6 +57,13 @@ def resetPaw():
     except Exception as e:
         internal_error(str(e))
 
+@app.route('/test', methods=["GET"])
+def getTest():
+    if request.method == 'GET':
+        return jsonify({'status': 'Just for test'})
+    else:
+        internal_error("Wrong http requests")
+
 
 
 if __name__ == '__main__':

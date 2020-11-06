@@ -1,5 +1,5 @@
 <template>
-  <modal name="resetpsw" :height="'200px'">
+  <modal name="resetpsw" :height="'200px'" :adaptive="true">
     <div class="container">
       <div class="input-container">
         <h2>请重新设置密码</h2>

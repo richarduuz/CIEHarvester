@@ -1,16 +1,22 @@
 #root files 
 __pycache__
+.DS_Store
+.idea/*
+
+
 
 #backend files
 
 backend/__pycache__
 backend/venv
 backend/settings.toml
+backend/.idea/*
 
 #frontend files
 frontend/node_modules/*
 frontend/package-lock.json
 frontend/app/package*
 frontend/app/node_modules
+frontend/.idea/*
 
 

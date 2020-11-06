@@ -1,5 +1,5 @@
 <template>
-  <modal name="login">
+  <modal name="login" :adaptive="true">
     <div class="container">
       <div class="input-container">
         <h2>输入密码进入系统</h2>
