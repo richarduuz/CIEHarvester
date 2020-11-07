@@ -1,7 +1,9 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 import json
 
 app = Flask(__name__)
+CORS(app)
 
 @app.errorhandler(500)
 def internal_error(error):
@@ -67,4 +69,4 @@ def getTest():
 
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=5000)
+    app.run(host='0.0.0.0', port=5000)
