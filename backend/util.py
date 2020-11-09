@@ -23,7 +23,10 @@ class Crawlers:
                 self.website[key]['body']['sk'] = self.modelNumber
         result_tmp, totalCount = self.__crawlSZLCSCPrices()
         result['szlcsc'] = result_tmp
+        result_tmp = self.__crawlICKEYPrices(modelNumber)
+        result['ickey'] = result_tmp
         return result
+
 
     #########Internal methods#########
     def __crawlSZLCSCPrices(self):
@@ -67,6 +70,50 @@ class Crawlers:
                 return None, 0
         else:
             return None, 0
+
+    def __crawlICKEYPrices(self, modelNumber):
+        from selenium import webdriver
+        import time
+        from bs4 import BeautifulSoup
+        result = []
+        driver = webdriver.Chrome(self.settings['CHROME']['path'])
+        url = self.settings['WEBSITES']['ickey']['url'] + modelNumber
+        driver.get(url)
+        time.sleep(5)
+        htmlSource = driver.page_source
+        soup = BeautifulSoup(htmlSource, 'lxml')
+        data = soup.find_all('div', class_='search-data-item')
+        for item in data:
+            tmp = {}
+            title = item.find('div', class_="result-header")
+            value = item.find('div', class_="result-list clearfix")
+            tmp[title.find('div', class_='search-w-sup').text] = value.find('div', class_='search-w-sup').text  # 供应商型号
+            tmp[title.find('div', class_='search-w-maf').text] = value.find('div', class_='search-w-maf').text  # 厂牌
+            tmp[title.find('div', class_='search-w-store').text] = value.find('div',
+                                                                              class_='search-result-bor store-num fw-b').text  # 库存
+            tmp['price'] = self.__setICKEYPrice(value.find('div', class_='tl search-w-price').text,
+                                    value.find('div', class_='tl search-w-hk').text,
+                                    value.find('div', class_='tl search-w-home').text)
+            result.append(tmp)
+        return result
+
+    def __setICKEYPrice(self, priceRank, hkdPrice, cnyPrice):
+        priceRank = priceRank.split(' ')
+        priceRank = priceRank[1: len(priceRank) - 1]
+        hkdPrice = hkdPrice.split(' ')
+        hkdPrice = hkdPrice[1: len(hkdPrice) - 1]
+        cnyPrice = cnyPrice.split(' ')
+        cnyPrice = cnyPrice[1: len(cnyPrice) - 1]
+
+        if len(hkdPrice) == 0:
+            hkdPrice = ['无价格' for i in range(len(priceRank))]
+        result = []
+        for i in range(len(priceRank)):
+            tmp = {}
+            tmp[priceRank[i]] = 'hkd: ' + hkdPrice[i] + ' cny: ' + cnyPrice[i]
+            result.append(tmp)
+        return result
+
 
 class Auther:
     def __init__(self):
