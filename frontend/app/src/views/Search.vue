@@ -36,10 +36,19 @@ export default {
         .then(response => response.json())
         .then(data => {
           if (data){
+            console.log(data)
             for (let keys of Object.keys(data)){
               this.prices[keys] = data[keys]
-              for (let item of this.prices[keys]){
-                item['价格'] = this.sortPrice(item['价格'])
+              if (keys === 'szlcsc'){
+                for (let item of this.prices[keys]){
+                  item['价格'] = this.sortszlcscPrice(item['价格'])
+                }
+              }
+              if (keys === 'ickey'){
+                let tmp = []
+                for (let item of this.prices[keys]){
+
+                }
               }
             }
             this.modelNumber = ''
@@ -50,7 +59,7 @@ export default {
     },
 
     //Internal methods
-    sortPrice(item){
+    sortszlcscPrice(item){
       let keys = Object.keys(item)
       keys = keys.map(item => {
         return parseInt(item)

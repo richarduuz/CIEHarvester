@@ -5,6 +5,6 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        url: 'http://81.68.171.213:5000'
+        url: 'http://0.0.0.0:5000'
     }
 })

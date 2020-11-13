@@ -21,12 +21,17 @@ class Crawlers:
                 self.website[key]['body']['pn'] = 1
                 self.website[key]['body']['k'] = self.modelNumber
                 self.website[key]['body']['sk'] = self.modelNumber
-        result_tmp, totalCount = self.__crawlSZLCSCPrices()
-        result['szlcsc'] = result_tmp
-        result_tmp = self.__crawlICKEYPrices(modelNumber)
-        result['ickey'] = result_tmp
+        try:
+            result_tmp, totalCount = self.__crawlSZLCSCPrices()
+            result['szlcsc'] = result_tmp
+        except:
+            result['szlcsc'] = {}
+        try:
+            result_tmp = self.__crawlICKEYPrices(modelNumber)
+            result['ickey'] = result_tmp
+        except:
+            result['ickey'] = {}
         return result
-
 
     #########Internal methods#########
     def __crawlSZLCSCPrices(self):
@@ -73,25 +78,29 @@ class Crawlers:
 
     def __crawlICKEYPrices(self, modelNumber):
         from selenium import webdriver
+        from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
         import time
         from bs4 import BeautifulSoup
         result = []
-        driver = webdriver.Chrome(self.settings['CHROME']['path'])
+        driver = webdriver.Remote(self.settings['CHROME']['chrome_url'], DesiredCapabilities.CHROME)
         url = self.settings['WEBSITES']['ickey']['url'] + modelNumber
         driver.get(url)
         time.sleep(5)
         htmlSource = driver.page_source
-        soup = BeautifulSoup(htmlSource, 'lxml')
+        soup = BeautifulSoup(htmlSource, 'html.parser')
         data = soup.find_all('div', class_='search-data-item')
         for item in data:
             tmp = {}
             title = item.find('div', class_="result-header")
             value = item.find('div', class_="result-list clearfix")
-            tmp[title.find('div', class_='search-w-sup').text] = value.find('div', class_='search-w-sup').text  # 供应商型号
-            tmp[title.find('div', class_='search-w-maf').text] = value.find('div', class_='search-w-maf').text  # 厂牌
-            tmp[title.find('div', class_='search-w-store').text] = value.find('div',
-                                                                              class_='search-result-bor store-num fw-b').text  # 库存
-            tmp['price'] = self.__setICKEYPrice(value.find('div', class_='tl search-w-price').text,
+            # tmp[title.find('div', class_='search-w-sup').text] = value.find('div', class_='search-w-sup').text  # 供应商型号
+            # tmp[title.find('div', class_='search-w-maf').text] = value.find('div', class_='search-w-maf').text  # 厂牌
+            # tmp[title.find('div', class_='search-w-store').text] = value.find('div',
+            #                                                                   class_='search-result-bor store-num fw-b').text  # 库存
+            tmp['型号'] = value.find('div', class_='search-w-sup').text
+            tmp['品牌'] = value.find('div', class_='search-w-maf').text
+            tmp['库存'] = value.find('div', class_='search-result-bor store-num fw-b').text
+            tmp['价格'] = self.__setICKEYPrice(value.find('div', class_='tl search-w-price').text,
                                     value.find('div', class_='tl search-w-hk').text,
                                     value.find('div', class_='tl search-w-home').text)
             result.append(tmp)
@@ -108,11 +117,10 @@ class Crawlers:
         if len(hkdPrice) == 0:
             hkdPrice = ['无价格' for i in range(len(priceRank))]
         result = []
+        tmp = {}
         for i in range(len(priceRank)):
-            tmp = {}
             tmp[priceRank[i]] = 'hkd: ' + hkdPrice[i] + ' cny: ' + cnyPrice[i]
-            result.append(tmp)
-        return result
+        return tmp
 
 
 class Auther:
