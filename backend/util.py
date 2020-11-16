@@ -22,15 +22,26 @@ class Crawlers:
                 self.website[key]['body']['k'] = self.modelNumber
                 self.website[key]['body']['sk'] = self.modelNumber
         try:
+            print("szlcsc")
             result_tmp, totalCount = self.__crawlSZLCSCPrices()
             result['szlcsc'] = result_tmp
-        except:
-            result['szlcsc'] = {}
+        except Exception as e:
+            print(e)
+            result['szlcsc'] = []
         try:
+            print("ickey")
             result_tmp = self.__crawlICKEYPrices(modelNumber)
             result['ickey'] = result_tmp
-        except:
-            result['ickey'] = {}
+        except Exception as e:
+            print(e)
+            result['ickey'] = []
+        try:
+            print('ti')
+            result_tmp = self.__crawlTIPrices(modelNumber)
+            result['ti'] = result_tmp
+        except Exception as e:
+            print(e)
+            result['ti'] = []
         return result
 
     #########Internal methods#########
@@ -82,7 +93,7 @@ class Crawlers:
         import time
         from bs4 import BeautifulSoup
         result = []
-        driver = webdriver.Remote(self.settings['CHROME']['chrome_url'], DesiredCapabilities.CHROME)
+        driver = webdriver.Remote(self.settings['CHROME']['chrome1_url'], DesiredCapabilities.CHROME)
         url = self.settings['WEBSITES']['ickey']['url'] + modelNumber
         driver.get(url)
         time.sleep(5)
@@ -106,6 +117,27 @@ class Crawlers:
             result.append(tmp)
         return result
 
+    def __crawlTIPrices(self, modelNumber):
+        from selenium import webdriver
+        from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+        from time import sleep
+        result = []
+        part = '{modelNum}#q={modelNum}&t=everything&linkId=1'.format(modelNum = modelNumber)
+        url = self.settings['WEBSITE']['TI']['url'] + part
+        driver = webdriver.Remote(self.settings['CHROME']['chrome2_url'], DesiredCapabilities.CHROME)
+        driver.get(url)
+        sleep(5)
+        shadow_section = driver.execute_script('''return document.querySelector("ti-opn-snapshot").shadowRoot''')
+        root = shadow_section.find_elements_by_css_selector('ti-card')
+        for root1 in root:
+            tmp = {}
+            data = root1.find_element_by_class_name('ti-opn-snapshot-details-row')
+            tmp['型号'] = data.find_element_by_class_name('ti-opn-snapshot-table-part-number').text
+            tmp['库存'] = data.find_elements_by_tag_name('td')[4].text
+            tmp['价格'] = self.__setTIPrice(data.find_elements_by_tag_name('td')[5].text)
+            result.append(tmp)
+        return result
+
     def __setICKEYPrice(self, priceRank, hkdPrice, cnyPrice):
         priceRank = priceRank.split(' ')
         priceRank = priceRank[1: len(priceRank) - 1]
@@ -121,6 +153,16 @@ class Crawlers:
         for i in range(len(priceRank)):
             tmp[priceRank[i]] = 'hkd: ' + hkdPrice[i] + ' cny: ' + cnyPrice[i]
         return tmp
+
+    def __setTIPrice(self, prices):
+        result = {}
+        tmp = prices.split('\n')
+        tmp = tmp[1:]
+        for item in tmp:
+            unit = item.split(' ')[0]
+            value = item.split(' ')[1]
+            result[unit] = value
+        return result
 
 
 class Auther:

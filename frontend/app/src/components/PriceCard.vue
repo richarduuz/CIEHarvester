@@ -8,7 +8,7 @@
       </div>
       <div>
         <span>价格: </span>
-        <div class="price-entry" v-for="(value, key) in price['价格']" :key="key">
+        <div v-if="typeof(price['价格']) !== 'string'" class="price-entry" v-for="(value, key) in price['价格']" :key="key">
           <span>{{key}}个: {{value}}</span>
         </div>
       </div>

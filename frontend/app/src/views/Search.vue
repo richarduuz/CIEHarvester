@@ -50,6 +50,9 @@ export default {
 
                 }
               }
+              if (keys === 'ti'){
+
+              }
             }
             this.modelNumber = ''
           }

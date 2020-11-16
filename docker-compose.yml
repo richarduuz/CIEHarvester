@@ -1,0 +1,20 @@
+version: "1.0.3"
+services:
+  chrome1:
+    image: "selenium/standalone-chrome"
+  chrome2: 
+    image: "selenium/standalone-chrome"
+  backend: 
+    image: "rickylove/cieharvester-backend:1.0.3"
+    links: 
+      - "chrome1"
+      - "chrome2"
+    depends_on:
+      - "chrome1"
+      - "chrome2"
+    ports:
+      - "5000:5000"
+  frontend:
+    image: "rickylove/cieharvester-frontend:1.0.30"
+    ports:
+      - "8080:80"
