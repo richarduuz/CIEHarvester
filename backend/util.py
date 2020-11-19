@@ -20,7 +20,7 @@ class Crawlers:
             if key == 'szlcsc':
                 self.website[key]['body']['pn'] = 1
                 self.website[key]['body']['k'] = self.modelNumber
-                self.website[key]['body']['sk'] = self.modelNumber
+                self.website[key]['body']['sk'] = self.modelNumber;
         try:
             print("szlcsc")
             result_tmp, totalCount = self.__crawlSZLCSCPrices()
@@ -102,12 +102,7 @@ class Crawlers:
         data = soup.find_all('div', class_='search-data-item')
         for item in data:
             tmp = {}
-            title = item.find('div', class_="result-header")
             value = item.find('div', class_="result-list clearfix")
-            # tmp[title.find('div', class_='search-w-sup').text] = value.find('div', class_='search-w-sup').text  # 供应商型号
-            # tmp[title.find('div', class_='search-w-maf').text] = value.find('div', class_='search-w-maf').text  # 厂牌
-            # tmp[title.find('div', class_='search-w-store').text] = value.find('div',
-            #                                                                   class_='search-result-bor store-num fw-b').text  # 库存
             tmp['型号'] = value.find('div', class_='search-w-sup').text
             tmp['品牌'] = value.find('div', class_='search-w-maf').text
             tmp['库存'] = value.find('div', class_='search-result-bor store-num fw-b').text
