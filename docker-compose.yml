@@ -2,8 +2,10 @@ version: "3.8"
 services:
   chrome1:
     image: "selenium/standalone-chrome"
+    shm_size: 256MB
   chrome2: 
     image: "selenium/standalone-chrome"
+    shm_size: 256MB
   backend: 
     image: "rickylove/cieharvester-backend:1.0.3"
     links: 
