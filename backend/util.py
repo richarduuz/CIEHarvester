@@ -20,7 +20,8 @@ class Crawlers:
             if key == 'szlcsc':
                 self.website[key]['body']['pn'] = 1
                 self.website[key]['body']['k'] = self.modelNumber
-                self.website[key]['body']['sk'] = self.modelNumber;
+                self.website[key]['body']['sk'] = self.modelNumber
+
         try:
             print("szlcsc")
             result_tmp, totalCount = self.__crawlSZLCSCPrices()
