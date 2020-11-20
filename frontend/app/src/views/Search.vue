@@ -47,11 +47,13 @@ export default {
               if (keys === 'ickey'){
                 let tmp = []
                 for (let item of this.prices[keys]){
-
+                  item['价格'] = this.sortIckeyPrice(item['价格'])
                 }
               }
               if (keys === 'ti'){
-
+                for(let item of this.prices[keys]){
+                  item['价格'] = this.sortTiPrice(item['价格'])
+                }
               }
             }
             this.modelNumber = ''
@@ -63,13 +65,39 @@ export default {
 
     //Internal methods
     sortszlcscPrice(item){
+      let result = {}
       let keys = Object.keys(item)
       keys = keys.map(item => {
-        return parseInt(item)
+        return parseFloat(item)
       })
-      let result = {}
       for (let i = 0; i<keys.length; i++){
         result[keys[i]] = item[keys[i]]
+      }
+      return result
+    },
+    sortIckeyPrice(item){
+      let result = {}
+      let tmp = Object.keys(item).map(key => {
+        return [parseInt(key.slice(0, -1)), item[key]]
+      })
+      tmp.sort((firstVal, secondVal) => {
+        return firstVal[0] - secondVal[0]
+      })
+      for (let ele of tmp){
+        result[ele[0]+'+'] = ele[1]
+      }
+      return result
+    },
+    sortTiPrice(item){
+      let result = {}
+      let tmp = Object.keys(item).map((key) => {
+        return [key, parseFloat(item[key].substring(1))]
+      })
+      tmp.sort((firstVal, secondVal) => {
+        return secondVal[1] - firstVal[1]
+      })
+      for (let ele of tmp){
+        result[ele[0]] = '$' + ele[1]
       }
       return result
     }

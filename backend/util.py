@@ -14,6 +14,7 @@ class Crawlers:
         self.modelNumber = ''
 
     def crawlAllPrices(self, modelNumber):
+        from time import time
         result = {}
         self.modelNumber = modelNumber
         for key in self.website.keys():
@@ -21,14 +22,17 @@ class Crawlers:
                 self.website[key]['body']['pn'] = 1
                 self.website[key]['body']['k'] = self.modelNumber
                 self.website[key]['body']['sk'] = self.modelNumber
-
+        t1 = time()
         try:
             print("szlcsc")
+            t1 = time()
             result_tmp, totalCount = self.__crawlSZLCSCPrices()
             result['szlcsc'] = result_tmp
         except Exception as e:
             print(e)
             result['szlcsc'] = []
+        t2 = time()
+        print(t2-t1)
         try:
             print("ickey")
             result_tmp = self.__crawlICKEYPrices(modelNumber)
@@ -36,6 +40,8 @@ class Crawlers:
         except Exception as e:
             print(e)
             result['ickey'] = []
+        t3 = time()
+        print(t3-t2)
         try:
             print('ti')
             result_tmp = self.__crawlTIPrices(modelNumber)
@@ -43,6 +49,7 @@ class Crawlers:
         except Exception as e:
             print(e)
             result['ti'] = []
+        print(time() - t3)
         return result
 
     #########Internal methods#########
@@ -94,44 +101,57 @@ class Crawlers:
         import time
         from bs4 import BeautifulSoup
         result = []
-        driver = webdriver.Remote(self.settings['CHROME']['chrome1_url'], DesiredCapabilities.CHROME)
-        url = self.settings['WEBSITES']['ickey']['url'] + modelNumber
+        options = webdriver.ChromeOptions()
+        options.add_argument('--disable-dev-shm-usage')
+        driver = webdriver.Remote(self.settings['CHROME']['chrome1_url'], options.to_capabilities())
+        part = '{modelNum}&upload=&bom_ab=null'.format(modelNum = modelNumber)
+        url = self.settings['WEBSITES']['ickey']['url'] + part
         driver.get(url)
         time.sleep(5)
         htmlSource = driver.page_source
         soup = BeautifulSoup(htmlSource, 'html.parser')
-        data = soup.find_all('div', class_='search-data-item')
+        allData = soup.find('div', id='searchResult')
+        data = allData.find_all('div', class_='search-data-item')
+        tmp_result = []
         for item in data:
+            tmp = item.find_all('div', class_='result-list-content huoqi_1')
+            for i in tmp:
+                tmp_result.append(i)
+
+        for item in tmp_result:
             tmp = {}
-            value = item.find('div', class_="result-list clearfix")
-            tmp['型号'] = value.find('div', class_='search-w-sup').text
-            tmp['品牌'] = value.find('div', class_='search-w-maf').text
-            tmp['库存'] = value.find('div', class_='search-result-bor store-num fw-b').text
-            tmp['价格'] = self.__setICKEYPrice(value.find('div', class_='tl search-w-price').text,
-                                    value.find('div', class_='tl search-w-hk').text,
-                                    value.find('div', class_='tl search-w-home').text)
+            tmp['型号'] = item.find('div', class_='textSearch search-w-name').text.split('    ')[0]
+            tmp['库存'] = item.find('div', class_='tl search-w-store').text.split(' ')[1]
+            tmp['价格'] = self.__setICKEYPrice(item.find('div', class_='tl search-w-price').text,
+                                             item.find('div', class_='tl search-w-hk').text,
+                                             item.find('div', class_='tl search-w-home').text)
+
             result.append(tmp)
         return result
 
     def __crawlTIPrices(self, modelNumber):
         from selenium import webdriver
-        from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+        # from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
         from time import sleep
+        from bs4 import BeautifulSoup
+
         result = []
-        part = '{modelNum}#q={modelNum}&t=everything&linkId=1'.format(modelNum = modelNumber)
+        part = '{modelNum}&keyMatch={modelNum}&tisearch=Search-CN-everything'.format(modelNum = modelNumber)
         url = self.settings['WEBSITE']['TI']['url'] + part
-        driver = webdriver.Remote(self.settings['CHROME']['chrome2_url'], DesiredCapabilities.CHROME)
+        options = webdriver.ChromeOptions()
+        options.add_argument('--disable-dev-shm-usage')
+        driver = webdriver.Remote(self.settings['CHROME']['chrome2_url'], options.to_capabilities())
         driver.get(url)
         sleep(5)
-        shadow_section = driver.execute_script('''return document.querySelector("ti-opn-snapshot").shadowRoot''')
-        root = shadow_section.find_elements_by_css_selector('ti-card')
-        for root1 in root:
-            tmp = {}
-            data = root1.find_element_by_class_name('ti-opn-snapshot-details-row')
-            tmp['型号'] = data.find_element_by_class_name('ti-opn-snapshot-table-part-number').text
-            tmp['库存'] = data.find_elements_by_tag_name('td')[4].text
-            tmp['价格'] = self.__setTIPrice(data.find_elements_by_tag_name('td')[5].text)
-            result.append(tmp)
+        htmlSource = driver.page_source
+        soup = BeautifulSoup(htmlSource, 'html.parser')
+        tmp = {}
+        tmp['库存'] = soup.find_all('span', class_='product-note product-availability')[0].text.strip()
+        prices = soup.find_all('div', class_='data-table-wrapper pdp-price-table')[0].text.split('\n')
+        prices = [tmp for tmp in prices if tmp != "" and tmp != "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t"]
+        tmp['价格'] = self.__setTIPrice(prices)
+        tmp['型号'] = modelNumber
+        result.append(tmp)
         return result
 
     def __setICKEYPrice(self, priceRank, hkdPrice, cnyPrice):
@@ -152,12 +172,10 @@ class Crawlers:
 
     def __setTIPrice(self, prices):
         result = {}
-        tmp = prices.split('\n')
-        tmp = tmp[1:]
-        for item in tmp:
-            unit = item.split(' ')[0]
-            value = item.split(' ')[1]
-            result[unit] = value
+        result[prices[2]] = prices[3]
+        result[prices[4]] = prices[5]
+        result[prices[6]] = prices[7]
+        result[prices[8]] = prices[9]
         return result
 
 
