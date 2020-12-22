@@ -33,7 +33,13 @@ if you get json like the one below, then you succeed
 
 ## Visit
 
-Go to the `<your ipaddress>:8080`, you will see the homepage
+Go to the `<your ipaddress>:8080`, you will see the homepage.
+
+Click the 开始使用
+
+Input the password ysy1001, the website will jump the the search page
+
+Input the chip model number, wait for about 30 seconds, results will pop up. 
 
 ## Progress
 
@@ -43,3 +49,4 @@ Go to the `<your ipaddress>:8080`, you will see the homepage
 * ~~TI~~
 * More platforms
 * Improve sustainability
+
