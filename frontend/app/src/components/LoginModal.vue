@@ -6,20 +6,22 @@
         <span>请输入密码: </span>
         <input v-model="password" type="password">
         <br>
+        <div class="btn-container">
+          <button class="submit-btn" @click="authID" :disabled="password.length === 0">确认</button>
+        </div>
         <br>
         <h2>或者你是管理员，你想重制密码: </h2>
-        <span>请输入密码: </span>
-        <input v-model="adminPassword" type="password">
+        <button @click="showAdminLogin">管理员登录</button>
+        <admin-login-modal></admin-login-modal>
       </div>
-      <div class="btn-container">
-        <p class="login-alert" v-show="adminPassword.length !== 0 && password.length !== 0">请只输入一个密码</p>
-        <button class="submit-btn" @click="authID" :disabled="password.length === 0 && adminPassword.length === 0">确认</button>
-      </div>
+
     </div>
   </modal>
 </template>
 
 <script>
+import AdminLoginModal from "@/components/AdminLoginModal";
+
 export default {
   name: "LoginModal",
   data(){
@@ -33,34 +35,27 @@ export default {
       console.log(this.password.length);
       console.log(this.adminPassword.length);
     },
+    showAdminLogin(){
+      this.$emit('showAdminLogin')
+    },
     authID(){
       let url = this.$store.state.url + '/auth'
       console.log(url);
       let postData = {}
-      if (this.password.length === 0){
-        postData['adminPassword'] = this.adminPassword
-      } else {
-        postData['password'] = this.password
-      }
+      postData['password'] = this.password;
       postData = JSON.stringify(postData)
       this.$http.post(url, postData)
         .then(response => response.json())
         .then(data => {
           if (data['message'] === 'right'){
             this.password = ''
-            this.adminPassword = ''
-            if (data['isAdmin']){
-              this.$emit('showResetpswModal')
-            }
-            else{
-              this.gotoSearch()
-            }
+            this.gotoSearch();
           } else {
             alert('密码不正确')
           }
         })
         .catch((e) => {
-          alert(str(e))
+          alert(e)
         })
     },
     gotoSearch(){
@@ -69,6 +64,9 @@ export default {
         path
       })
     }
+  },
+  components: {
+    AdminLoginModal
   }
 }
 </script>
