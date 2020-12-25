@@ -1,12 +1,16 @@
 <template>
   <modal name="adminlogin" :adaptive="true">
-    <div class="container">
+    <div class="admin-container">
       <div class="input-container">
         <h2>重置密码</h2>
-        <span>请输入管理员密码: </span>
-        <input v-model="adminPassword" type="password">
-        <div class="btn-container">
-          <button class="submit-btn" @click="adminAuth">登录</button>
+        <div style="display: flex;">
+          <div style="float: left">
+            <span>请输入管理员密码: </span>
+            <input v-model="adminPassword" type="password">
+          </div>
+          <div class="btn-container">
+            <button class="submit-btn" @click="adminAuth">登录</button>
+          </div>
         </div>
       </div>
     </div>
@@ -45,19 +49,22 @@ export default {
 </script>
 
 <style scoped>
-div.container{
-  position: absolute;
-  text-align: left;
-  height: 100%;
-  width: 100%;
+div.admin-container{
+  /*text-align: left;*/
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /*height: 100%;*/
+  /*width: 100%;*/
 }
 div.input-container{
   margin: 10px;
+  /*display: flex;*/
 }
 
 
 div.btn-container{
-  margin: 10px;
+  padding-left: 10px;
   bottom: 0;
 }
 button.submit-btn{

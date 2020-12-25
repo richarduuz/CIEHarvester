@@ -1,18 +1,23 @@
 <template>
-  <modal name="resetpsw" :height="'200px'" :adaptive="true">
-    <div class="container">
-      <div class="input-container">
-        <h2>请重新设置密码</h2>
-        <span>请输入密码: </span>
-        <input type="password" v-model="password">
-        <br>
-        <br>
-        <span>请确认新的密码: </span>
-        <input type="password" v-model.lazy="password_">
-      </div>
-      <div class="btn-container">
-        <p class="login-alert" v-show="password !== password_">请输入一样的密码</p>
-        <button class="submit-btn" @click="submit">确认</button>
+  <modal name="resetpsw" :adaptive="true" height="300">
+    <div class="RPM-container">
+      <div style="display: flex">
+        <div class="RPM-input-container">
+          <h2>请重新设置密码</h2>
+          <span>请输入密码: </span>
+          <input type="password" v-model="password">
+          <br>
+          <br>
+          <span>请确认新的密码: </span>
+          <input type="password" v-model.lazy="password_">
+        </div>
+        <div class="RPM-btn-container">
+          <div style="position: absolute; bottom: 0; ">
+            <button class="submit-btn" @click="submit" style="float: left">确认</button>
+            <p class="login-alert" v-show="password !== password_">请输入一样的密码</p>
+          </div>
+        </div>
+
       </div>
     </div>
   </modal>
@@ -66,14 +71,17 @@ export default {
 </script>
 
 <style scoped>
-div.container{
+div.RPMcontainer{
   position: absolute;
   text-align: left;
-  height: 100%;
+  height: 300px;
   width: 100%;
+  align-items: center;
+  justify-content: center;
+  display: flex;
 }
 
-div.input-container{
+div.RPM-input-container{
   margin: 10px;
 }
 
@@ -84,9 +92,10 @@ p.login-alert{
   margin: 0;
 }
 
-div.btn-container{
-  margin: 10px;
-  bottom: 0;
+div.RPM-btn-container{
+  margin-bottom: 10px;
+  width: 200px;
+  position: relative;
 }
 
 button.submit-btn{

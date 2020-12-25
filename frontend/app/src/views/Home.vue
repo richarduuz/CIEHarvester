@@ -1,10 +1,17 @@
 <template>
   <div class="home">
-    欢迎来到CIE询价系统
-    <button @click="showLogin">开始使用</button>
-    <LoginModal @showAdminLogin="showAdminLogin"></LoginModal>
-    <admin-login-modal @showResetpswModal="showResetpsw"></admin-login-modal >
-    <ResetpswModal @resetpsw="hideResetpsw"></ResetpswModal>
+<!--    <div class="container">-->
+<!--      <div class="background"></div>-->
+<!--      <div class="login-window">-->
+<!--        <LoginModal @showAdminLogin="showAdminLogin"></LoginModal>-->
+<!--        <admin-login-modal @showResetpswModal="showResetpsw"></admin-login-modal >-->
+<!--        <ResetpswModal @resetpsw="hideResetpsw"></ResetpswModal></div>-->
+<!--    </div>-->
+    <div class="container">
+      <LoginModal @showAdminLogin="showAdminLogin"></LoginModal>
+      <admin-login-modal @showResetpswModal="showResetpsw"></admin-login-modal >
+      <ResetpswModal @resetpsw="hideResetpsw"></ResetpswModal>
+    </div>
   </div>
 </template>
 
@@ -45,3 +52,37 @@ export default {
   }
 }
 </script>
+<style>
+.home{
+  display: flex;
+  width: 100%;
+  height: 100%;
+  background-image: url("../assets/background3.jpg");
+  background-size: cover;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+}
+
+.container{
+  display: flex;
+  background: #f9f9f9;
+  margin: auto;
+}
+.background{
+  width: 65%;
+  height: 100%;
+  float: left;
+  background-image: url("../assets/background3.jpg");
+  background-size: cover;
+}
+.login-window{
+  display: flex;
+  /*margin-left: 25%;*/
+  height: 100%;
+  background: seashell;
+  align-items: center;
+  justify-content: center;
+}
+
+</style>

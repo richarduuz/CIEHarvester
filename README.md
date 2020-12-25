@@ -44,14 +44,27 @@ Input the chip model number, wait for about 30 seconds, results will pop up.
 ## Progress
 
 * ~~Primitive login system~~
+
 * ~~yunhan~~
+
 * ~~ICKEY~~
+
 * ~~TI~~
+
 * ~~Adjust password input interfact~~
+
+* ~~Beautify the login interface~~
+
 * More platforms
+
   * Digikey
+
 * Improve sustainability
+
 * Function
+
   * Export Excel
   * Import Excel
+
+  
 

@@ -1,22 +1,25 @@
 <template>
-  <modal name="login" :adaptive="true">
-    <div class="container">
+<!--  <modal name="login" :adaptive="true">-->
+    <div class="login-container">
       <div class="input-container">
         <h2>输入密码进入系统</h2>
-        <span>请输入密码: </span>
-        <input v-model="password" type="password">
-        <br>
+        <div style="float: left;">
+          <span>请输入密码: </span>
+          <input v-model="password" type="password">
+          <br>
+        </div>
         <div class="btn-container">
           <button class="submit-btn" @click="authID" :disabled="password.length === 0">确认</button>
         </div>
         <br>
-        <h2>或者你是管理员，你想重制密码: </h2>
+      </div>
+      <div style="margin: 10px;">
+        <h5>重置密码</h5>
         <button @click="showAdminLogin">管理员登录</button>
         <admin-login-modal></admin-login-modal>
       </div>
-
     </div>
-  </modal>
+<!--  </modal>-->
 </template>
 
 <script>
@@ -72,20 +75,21 @@ export default {
 </script>
 
 <style scoped>
-div.container{
-  position: absolute;
-  text-align: left;
-  height: 100%;
-  width: 100%;
+div.login-container{
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  background: white;
 }
+
 div.input-container{
   margin: 10px;
 }
 
 div.btn-container{
-  margin: 10px;
   bottom: 0;
+  padding-left: 10px;
+  display: flex;
 }
+
 button.submit-btn{
   float: right;
 }
