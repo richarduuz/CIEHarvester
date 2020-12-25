@@ -47,6 +47,11 @@ Input the chip model number, wait for about 30 seconds, results will pop up.
 * ~~yunhan~~
 * ~~ICKEY~~
 * ~~TI~~
+* ~~Adjust password input interfact~~
 * More platforms
+  * Digikey
 * Improve sustainability
+* Function
+  * Export Excel
+  * Import Excel
 
