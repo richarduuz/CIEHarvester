@@ -30,13 +30,34 @@ def authUsers():
             rawData = request.data.decode('utf-8')
             data = json.loads(rawData)
             result = {'status': 'Okay', 'message': 'wrong'}
-            if 'password' in data.keys():
-                password = data['password']
-                result['isAdmin'] = False
-            else:
-                password = data['adminPassword']
-                result['isAdmin'] = True
-            if auther.authUser(password, result['isAdmin']):
+            password = data['password']
+            if auther.authUser(password, False):
+                result['message'] = 'right'
+            # if 'password' in data.keys():
+            #     password = data['password']
+            #     result['isAdmin'] = False
+            # else:
+            #     password = data['adminPassword']
+            #     result['isAdmin'] = True
+            # if auther.authUser(password, result['isAdmin']):
+            #     result['message'] = 'right'
+            return jsonify(result)
+        else:
+            pass
+    except Exception as e:
+        internal_error(str(e))
+
+@app.route('/admin', methods=['POST'])
+def authAdmin():
+    import util
+    auther = util.Auther()
+    try:
+        if request.method == 'POST':
+            rawData = request.data.decode('utf-8')
+            data = json.loads(rawData)
+            result = {'status': 'Okay', 'message': 'wrong'}
+            password = data['adminPassword']
+            if auther.authUser(password, True):
                 result['message'] = 'right'
             return jsonify(result)
         else:
