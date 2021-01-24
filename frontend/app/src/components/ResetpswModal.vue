@@ -1,6 +1,6 @@
 <template>
-  <modal name="resetpsw" :adaptive="true" height="300">
-    <div class="RPM-container">
+  <modal name="resetpsw" :adaptive="true">
+    <!-- <div class="RPM-container">
       <div style="display: flex">
         <div class="RPM-input-container">
           <h2>请重新设置密码</h2>
@@ -17,9 +17,20 @@
             <p class="login-alert" v-show="password !== password_">请输入一样的密码</p>
           </div>
         </div>
-
       </div>
-    </div>
+    </div> -->
+    <section class="reset-container">
+      <h2>请重置密码</h2>
+      <label for="">请输入密码:
+        <input type="password" v-model="password">
+      </label>
+      <br>
+      <label for="">请确认密码:
+        <input type="password" v-model="password_">
+      </label>
+      <button @click="submit" :disabled="password !== password_">确认</button>
+      <p v-show="password !== password_">请输入一样的密码</p>
+    </section>
   </modal>
 </template>
 
@@ -71,7 +82,40 @@ export default {
 </script>
 
 <style scoped>
-div.RPMcontainer{
+.reset-container {
+  position: absolute;
+  top: 60px;
+  left: 165px;
+  text-align: center;
+}
+
+.reset-container input {
+  outline: none;
+}
+
+.reset-container button {
+  display: block;
+  margin: 14px auto;
+  border: none;
+  border-radius: 6px;
+  padding: 4px;
+  outline: none;
+  font-size: 14px;
+  font-weight: 400;
+  transition: box-shadow .5s;
+}
+
+.reset-container button:hover {
+  box-shadow: 2px 2px 1px 1px rgba(0,0,0,.2);
+}
+
+.reset-container p {
+  color: red;
+  font-size:14px;
+  font-weight: 700;
+}
+
+/* div.RPMcontainer{
   position: absolute;
   text-align: left;
   height: 300px;
@@ -100,5 +144,5 @@ div.RPM-btn-container{
 
 button.submit-btn{
   float: right;
-}
+} */
 </style>

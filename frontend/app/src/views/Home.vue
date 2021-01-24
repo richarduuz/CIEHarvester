@@ -1,15 +1,8 @@
 <template>
   <div class="home">
-<!--    <div class="container">-->
-<!--      <div class="background"></div>-->
-<!--      <div class="login-window">-->
-<!--        <LoginModal @showAdminLogin="showAdminLogin"></LoginModal>-->
-<!--        <admin-login-modal @showResetpswModal="showResetpsw"></admin-login-modal >-->
-<!--        <ResetpswModal @resetpsw="hideResetpsw"></ResetpswModal></div>-->
-<!--    </div>-->
     <div class="container">
       <LoginModal @showAdminLogin="showAdminLogin"></LoginModal>
-      <admin-login-modal @showResetpswModal="showResetpsw"></admin-login-modal >
+      <!-- <admin-login-modal @showResetpswModal="showResetpsw"></admin-login-modal > -->
       <ResetpswModal @resetpsw="hideResetpsw"></ResetpswModal>
     </div>
   </div>
