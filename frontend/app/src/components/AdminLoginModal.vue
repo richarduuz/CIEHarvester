@@ -17,7 +17,7 @@
     <section class="admin-container">
       <h2>重置密码</h2>
       <label for="">请输入管理员登录密码：
-        <input v-model="adminPassword" type="password">
+        <input v-model="adminPassword" type="password" autofocus>
         <button @click="adminAuth" :disabled="adminPassword.length === 0">登录</button>
       </label>
     </section>

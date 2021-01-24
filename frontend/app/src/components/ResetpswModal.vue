@@ -22,7 +22,7 @@
     <section class="reset-container">
       <h2>请重置密码</h2>
       <label for="">请输入密码:
-        <input type="password" v-model="password">
+        <input type="password" v-model="password" autofocus>
       </label>
       <br>
       <label for="">请确认密码:
